@@ -3,7 +3,8 @@
 	"package": "hamud.mod.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"MerchantOfferMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
