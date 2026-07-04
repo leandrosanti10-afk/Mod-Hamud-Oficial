@@ -1,3 +1,5 @@
 {
-  "item.hamud-mod.moeda_hamud": "Hamud Coin"
+  "item.hamud-mod.moeda_hamud": "Hamud Coin",
+  "entity.hamud-mod.remy": "Remy",
+  "item.hamud-mod.remy_spawn_egg": "Remy Spawn Egg"
 }
