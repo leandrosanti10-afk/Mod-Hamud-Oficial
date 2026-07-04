@@ -1,5 +1,6 @@
 {
   "item.hamud-mod.moeda_hamud": "Moeda Hamud",
   "entity.hamud-mod.remy": "Remy",
-  "item.hamud-mod.remy_spawn_egg": "Ovo de Invocação do Remy"
+  "item.hamud-mod.remy_spawn_egg": "Ovo de Invocação do Remy",
+  "block.hamud-mod.caixote": "Caixote da Fazenda"
 }
