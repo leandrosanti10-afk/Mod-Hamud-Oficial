@@ -2,9 +2,6 @@ package hamud.mod.entity;
 
 import hamud.mod.ModItems;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -18,10 +15,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemyEntity extends Villager {
 
+    private BlockPos hamudmod$sleepTarget;
+    private int hamudmod$sleepSearchCooldown = 0;
     public RemyEntity(EntityType<? extends Villager> entityType, Level level) {
         super(entityType, level);
 
@@ -42,143 +46,139 @@ public class RemyEntity extends Villager {
     @Override
     protected void updateTrades() {
         MerchantOffers offers = this.getOffers();
-        offers.clear();
 
         int level = this.getVillagerData().getLevel();
 
-        switch (level) {
-            case 1 -> addLevel1Trades(offers);
-            case 2 -> addLevel2Trades(offers);
-            case 3 -> addLevel3Trades(offers);
-            case 4 -> addLevel4Trades(offers);
-            case 5 -> addLevel5Trades(offers);
-            default -> addLevel1Trades(offers);
+        int targetTradeCount = switch (level) {
+            case 1 -> 2;
+            case 2 -> 4;
+            case 3 -> 6;
+            case 4 -> 8;
+            case 5 -> 10;
+            default -> 2;
+        };
+
+        List<MerchantOffer> allTrades = createRemyTrades();
+
+        for (int i = offers.size(); i < targetTradeCount && i < allTrades.size(); i++) {
+            offers.add(allTrades.get(i));
         }
     }
 
-    private void addLevel1Trades(MerchantOffers offers) {
-        // Remy compra itens de fazenda e paga com moeda hamud
-        offers.add(new MerchantOffer(
+    private List<MerchantOffer> createRemyTrades() {
+        List<MerchantOffer> trades = new ArrayList<>();
+
+        // =========================
+        // NÍVEL 1 — 2 TROCAS
+        // =========================
+
+        // 20 trigo -> 1 Moeda Hamud
+        trades.add(new MerchantOffer(
                 new ItemStack(Items.WHEAT, 20),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                16, 2, 0.05f
+                16,
+                2,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.CARROT, 15),
-                new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                16, 2, 0.05f
-        ));
-
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.POTATO, 15),
-                new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                16, 2, 0.05f
-        ));
-
-        // Remy vende itens básicos por moeda hamud
-        offers.add(new MerchantOffer(
+        // 1 Moeda Hamud -> 6 pães
+        trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
                 new ItemStack(Items.BREAD, 6),
-                16, 1, 0.05f
+                16,
+                1,
+                0.05f
         ));
-    }
 
-    private void addLevel2Trades(MerchantOffers offers) {
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.BEETROOT, 18),
+        // =========================
+        // NÍVEL 2 — TOTAL 4 TROCAS
+        // =========================
+
+        // 22 cenouras -> 1 Moeda Hamud
+        trades.add(new MerchantOffer(
+                new ItemStack(Items.CARROT, 22),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                16, 5, 0.05f
+                16,
+                5,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.PUMPKIN, 10),
+        // 26 batatas -> 1 Moeda Hamud
+        trades.add(new MerchantOffer(
+                new ItemStack(Items.POTATO, 26),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                12, 5, 0.05f
+                16,
+                5,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(ModItems.MOEDA_HAMUD, 2),
-                new ItemStack(Items.APPLE, 8),
-                12, 3, 0.05f
+        // =========================
+        // NÍVEL 3 — TOTAL 6 TROCAS
+        // =========================
+
+        // 15 beterrabas -> 1 Moeda Hamud
+        trades.add(new MerchantOffer(
+                new ItemStack(Items.BEETROOT, 15),
+                new ItemStack(ModItems.MOEDA_HAMUD, 1),
+                16,
+                10,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
+        // 3 Moedas Hamud -> 4 tortas de abóbora
+        trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 3),
                 new ItemStack(Items.PUMPKIN_PIE, 4),
-                12, 3, 0.05f
+                12,
+                10,
+                0.05f
         ));
-    }
 
-    private void addLevel3Trades(MerchantOffers offers) {
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.MELON, 12),
+        // =========================
+        // NÍVEL 4 — TOTAL 8 TROCAS
+        // =========================
+
+        // 10 abóboras -> 1 Moeda Hamud
+        trades.add(new MerchantOffer(
+                new ItemStack(Items.PUMPKIN, 10),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                12, 10, 0.05f
+                12,
+                15,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.SUGAR_CANE, 20),
+        // 4 melancias -> 1 Moeda Hamud
+        trades.add(new MerchantOffer(
+                new ItemStack(Items.MELON, 4),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
-                12, 10, 0.05f
+                12,
+                15,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(ModItems.MOEDA_HAMUD, 4),
-                new ItemStack(Items.GOLDEN_CARROT, 3),
-                12, 5, 0.05f
+        // =========================
+        // NÍVEL 5 — TOTAL 10 TROCAS
+        // =========================
+
+        // 3 Moedas Hamud -> 18 cookies
+        trades.add(new MerchantOffer(
+                new ItemStack(ModItems.MOEDA_HAMUD, 3),
+                new ItemStack(Items.COOKIE, 18),
+                12,
+                20,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(ModItems.MOEDA_HAMUD, 4),
-                new ItemStack(Items.COOKIE, 12),
-                12, 5, 0.05f
-        ));
-    }
-
-    private void addLevel4Trades(MerchantOffers offers) {
-        offers.add(new MerchantOffer(
-                new ItemStack(Items.HONEY_BOTTLE, 6),
-                new ItemStack(ModItems.MOEDA_HAMUD, 2),
-                10, 15, 0.05f
-        ));
-
-        offers.add(new MerchantOffer(
-                new ItemStack(ModItems.MOEDA_HAMUD, 5),
-                new ItemStack(Items.CAKE, 1),
-                8, 8, 0.05f
-        ));
-
-        offers.add(new MerchantOffer(
+        // 6 Moedas Hamud -> 3 cenouras douradas
+        trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 6),
-                new ItemStack(Items.GOLDEN_APPLE, 1),
-                6, 10, 0.05f
-        ));
-    }
-
-    private void addLevel5Trades(MerchantOffers offers) {
-        offers.add(new MerchantOffer(
-                new ItemStack(ModItems.MOEDA_HAMUD, 8),
-                new ItemStack(Items.ENCHANTED_GOLDEN_APPLE, 1),
-                2, 30, 0.05f
+                new ItemStack(Items.GOLDEN_CARROT, 3),
+                8,
+                30,
+                0.05f
         ));
 
-        offers.add(new MerchantOffer(
-                new ItemStack(ModItems.MOEDA_HAMUD, 7),
-                new ItemStack(Items.GOLDEN_CARROT, 8),
-                6, 20, 0.05f
-        ));
-    }
-
-    @Override
-    public VillagerData getVillagerData() {
-        VillagerData data = super.getVillagerData();
-        return data.setProfession(VillagerProfession.FARMER);
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
+        return trades;
     }
 
     @Override
@@ -188,18 +188,97 @@ public class RemyEntity extends Villager {
         this.setVillagerData(
                 this.getVillagerData()
                         .setProfession(VillagerProfession.FARMER)
+                        .setType(VillagerType.PLAINS)
         );
     }
 
-    @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-        RemyEntity baby = new RemyEntity((EntityType<? extends Villager>) this.getType(), level);
-        baby.setVillagerData(
-                baby.getVillagerData()
-                        .setProfession(VillagerProfession.FARMER)
-                        .setType(VillagerType.PLAINS)
-        );
-        return baby;
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+    }
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide) {
+            this.hamudmod$handleSleeping();
+        }
+    }
+
+    private void hamudmod$handleSleeping() {
+        // De dia, acorda
+        if (this.level().isDay()) {
+            this.hamudmod$sleepTarget = null;
+
+            if (this.isSleeping()) {
+                this.stopSleeping();
+            }
+
+            return;
+        }
+
+        // Se já está dormindo, não faz nada
+        if (this.isSleeping()) {
+            return;
+        }
+
+        // Se está negociando, não tenta dormir
+        if (this.isTrading()) {
+            return;
+        }
+
+        // Cooldown para não procurar cama todo tick
+        if (this.hamudmod$sleepSearchCooldown > 0) {
+            this.hamudmod$sleepSearchCooldown--;
+        }
+
+        // Procura cama se ainda não tiver alvo
+        if (this.hamudmod$sleepTarget == null && this.hamudmod$sleepSearchCooldown <= 0) {
+            this.hamudmod$sleepTarget = this.hamudmod$findNearbyBed();
+            this.hamudmod$sleepSearchCooldown = 100;
+        }
+
+        // Se achou cama, anda até ela
+        if (this.hamudmod$sleepTarget != null) {
+            double distance = this.distanceToSqr(
+                    this.hamudmod$sleepTarget.getX() + 0.5,
+                    this.hamudmod$sleepTarget.getY(),
+                    this.hamudmod$sleepTarget.getZ() + 0.5
+            );
+
+            // Se estiver longe, vai até a cama
+            if (distance > 2.5) {
+                this.getNavigation().moveTo(
+                        this.hamudmod$sleepTarget.getX() + 0.5,
+                        this.hamudmod$sleepTarget.getY(),
+                        this.hamudmod$sleepTarget.getZ() + 0.5,
+                        0.6
+                );
+            } else {
+                // Se chegou perto, deita
+                this.getNavigation().stop();
+                this.startSleeping(this.hamudmod$sleepTarget);
+            }
+        }
+    }
+
+    private BlockPos hamudmod$findNearbyBed() {
+        BlockPos origin = this.blockPosition();
+
+        int radius = 16;
+
+        for (BlockPos pos : BlockPos.betweenClosed(
+                origin.offset(-radius, -3, -radius),
+                origin.offset(radius, 3, radius)
+        )) {
+            BlockState state = this.level().getBlockState(pos);
+
+            if (state.is(BlockTags.BEDS)) {
+                return pos.immutable();
+            }
+        }
+
+        return null;
     }
 }
+
