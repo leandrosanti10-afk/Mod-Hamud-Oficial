@@ -13,7 +13,7 @@ public class ModEntities {
             BuiltInRegistries.ENTITY_TYPE,
             new ResourceLocation(HamudMod.MOD_ID, "remy"),
             EntityType.Builder.of(RemyEntity::new, MobCategory.CREATURE)
-                    .sized(0.6f, 1.95f)
+                    .sized(0.9f, 2.05f)
                     .build("remy")
     );
 
