@@ -1,17 +1,20 @@
 package hamud.mod.entity;
 
 import hamud.mod.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -26,6 +29,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,6 +41,12 @@ public class RemyEntity extends AbstractVillager {
 
     private int remyTradeLevel = 1;
     private int remyTradeXp = 0;
+
+    private BlockPos remySleepTarget;
+    private BlockPos remyComposterTarget;
+
+    private int remySleepSearchCooldown = 0;
+    private int remyComposterSearchCooldown = 0;
 
     public RemyEntity(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
@@ -61,15 +73,12 @@ public class RemyEntity extends AbstractVillager {
 
         int targetTradeCount = getTradeCountForLevel();
 
-        // Se por algum motivo ele tiver trades demais, remove as extras.
-        // Isso corrige Remys antigos que já nasceram com 10 trocas.
         while (offers.size() > targetTradeCount) {
             offers.remove(offers.size() - 1);
         }
 
         List<MerchantOffer> allTrades = createRemyTrades();
 
-        // Adiciona apenas as trocas permitidas pelo nível atual
         for (int i = offers.size(); i < targetTradeCount && i < allTrades.size(); i++) {
             offers.add(allTrades.get(i));
         }
@@ -86,10 +95,21 @@ public class RemyEntity extends AbstractVillager {
         };
     }
 
+    private int getXpNeededForNextLevel() {
+        return switch (this.remyTradeLevel) {
+            case 1 -> 10;
+            case 2 -> 20;
+            case 3 -> 40;
+            case 4 -> 60;
+            default -> Integer.MAX_VALUE;
+        };
+    }
+
     private List<MerchantOffer> createRemyTrades() {
         List<MerchantOffer> trades = new ArrayList<>();
 
-        // 1 — trigo -> moeda
+        // NÍVEL 1 — 2 TROCAS
+
         trades.add(new MerchantOffer(
                 new ItemStack(Items.WHEAT, 20),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
@@ -98,7 +118,6 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 2 — moeda -> pão
         trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
                 new ItemStack(Items.BREAD, 6),
@@ -107,7 +126,8 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 3 — cenoura -> moeda
+        // NÍVEL 2 — 4 TROCAS
+
         trades.add(new MerchantOffer(
                 new ItemStack(Items.CARROT, 22),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
@@ -116,7 +136,6 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 4 — batata -> moeda
         trades.add(new MerchantOffer(
                 new ItemStack(Items.POTATO, 26),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
@@ -125,7 +144,8 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 5 — beterraba -> moeda
+        // NÍVEL 3 — 6 TROCAS
+
         trades.add(new MerchantOffer(
                 new ItemStack(Items.BEETROOT, 15),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
@@ -134,7 +154,6 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 6 — moeda -> torta de abóbora
         trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 3),
                 new ItemStack(Items.PUMPKIN_PIE, 4),
@@ -143,7 +162,8 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 7 — abóbora -> moeda
+        // NÍVEL 4 — 8 TROCAS
+
         trades.add(new MerchantOffer(
                 new ItemStack(Items.PUMPKIN, 10),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
@@ -152,7 +172,6 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 8 — melancia -> moeda
         trades.add(new MerchantOffer(
                 new ItemStack(Items.MELON, 4),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
@@ -161,7 +180,8 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 9 — moeda -> cookies
+        // NÍVEL 5 — 10 TROCAS
+
         trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 3),
                 new ItemStack(Items.COOKIE, 18),
@@ -170,7 +190,6 @@ public class RemyEntity extends AbstractVillager {
                 0.05f
         ));
 
-        // 10 — moeda -> cenoura dourada
         trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 6),
                 new ItemStack(Items.GOLDEN_CARROT, 3),
@@ -200,11 +219,23 @@ public class RemyEntity extends AbstractVillager {
             return InteractionResult.PASS;
         }
 
-        if (this.getOffers().isEmpty()) {
-            this.updateTrades();
+        if (this.isSleeping()) {
+            this.stopSleeping();
         }
 
-        System.out.println("Remy clicado. Trades carregadas: " + this.getOffers().size());
+        this.remySleepTarget = null;
+        this.remyComposterTarget = null;
+        this.getNavigation().stop();
+        this.setDeltaMovement(0.0, 0.0, 0.0);
+
+        this.updateTrades();
+
+        System.out.println(
+                "Remy clicado. Nível: " + this.remyTradeLevel +
+                        " | XP atual: " + this.remyTradeXp +
+                        " | XP para próximo nível: " + getXpNeededForNextLevel() +
+                        " | Trades: " + this.getOffers().size()
+        );
 
         if (this.getOffers().isEmpty()) {
             return InteractionResult.PASS;
@@ -225,25 +256,28 @@ public class RemyEntity extends AbstractVillager {
 
     @Override
     protected void rewardTradeXp(MerchantOffer offer) {
-        // XP interno do Remy para liberar novas trocas
-        this.remyTradeXp += 5;
+        if (this.remyTradeLevel < 5) {
+            int xpGanho = 5;
 
-        int oldLevel = this.remyTradeLevel;
-        this.remyTradeLevel = calculateRemyLevel();
+            this.remyTradeXp += xpGanho;
 
-        // Se subiu de nível, adiciona novas trocas
-        if (this.remyTradeLevel > oldLevel) {
-            this.updateTrades();
+            int xpNecessario = getXpNeededForNextLevel();
 
-            System.out.println("Remy subiu para o nível " + this.remyTradeLevel);
+            if (this.remyTradeXp >= xpNecessario) {
+                this.remyTradeLevel++;
+                this.remyTradeXp = 0;
+
+                this.updateTrades();
+
+                System.out.println("Remy subiu para o nível " + this.remyTradeLevel);
+            }
         }
 
-        // XP visual vanilla
         if (offer.shouldRewardExp()) {
             int xp = 3 + this.random.nextInt(4);
 
             this.level().addFreshEntity(
-                    new net.minecraft.world.entity.ExperienceOrb(
+                    new ExperienceOrb(
                             this.level(),
                             this.getX(),
                             this.getY() + 0.5,
@@ -254,37 +288,197 @@ public class RemyEntity extends AbstractVillager {
         }
     }
 
-    private int calculateRemyLevel() {
-        if (this.remyTradeXp >= 120) {
-            return 5;
-        }
-
-        if (this.remyTradeXp >= 70) {
-            return 4;
-        }
-
-        if (this.remyTradeXp >= 30) {
-            return 3;
-        }
-
-        if (this.remyTradeXp >= 10) {
-            return 2;
-        }
-
-        return 1;
-    }
-
     @Override
     public void tick() {
         super.tick();
 
+        // Client: só partículas
         if (this.level().isClientSide) {
             this.hamudmod$spawnCigaretteSmoke();
+            return;
         }
 
-        if (!this.level().isClientSide && this.isTrading()) {
+        // Se está dormindo, trava completamente
+        if (this.isSleeping()) {
             this.getNavigation().stop();
+            this.setDeltaMovement(0.0, 0.0, 0.0);
+            this.remySleepTarget = null;
+            this.remyComposterTarget = null;
+
+            if (this.level().isDay()) {
+                this.stopSleeping();
+            }
+
+            return;
         }
+
+        // Se está negociando, não anda, não dorme, não trabalha
+        if (this.isTrading()) {
+            this.getNavigation().stop();
+            this.setDeltaMovement(0.0, 0.0, 0.0);
+            this.remySleepTarget = null;
+            this.remyComposterTarget = null;
+            return;
+        }
+
+        // Noite: procurar cama e dormir
+        if (!this.level().isDay()) {
+            this.hamudmod$handleSleeping();
+            return;
+        }
+
+        // Dia: procurar composteira
+        this.remySleepTarget = null;
+        this.hamudmod$handleComposterAffinity();
+    }
+
+    private void hamudmod$handleSleeping() {
+        if (this.isSleeping()) {
+            return;
+        }
+
+        if (this.isTrading()) {
+            return;
+        }
+
+        if (this.remySleepSearchCooldown > 0) {
+            this.remySleepSearchCooldown--;
+        }
+
+        if (this.remySleepTarget == null && this.remySleepSearchCooldown <= 0) {
+            this.remySleepTarget = this.hamudmod$findNearbyBed();
+            this.remySleepSearchCooldown = 100;
+        }
+
+        if (this.remySleepTarget != null) {
+            BlockState bedState = this.level().getBlockState(this.remySleepTarget);
+
+            if (!bedState.is(BlockTags.BEDS)) {
+                this.remySleepTarget = null;
+                return;
+            }
+
+            double distance = this.distanceToSqr(
+                    this.remySleepTarget.getX() + 0.5,
+                    this.remySleepTarget.getY(),
+                    this.remySleepTarget.getZ() + 0.5
+            );
+
+            if (distance > 2.5) {
+                this.getNavigation().moveTo(
+                        this.remySleepTarget.getX() + 0.5,
+                        this.remySleepTarget.getY(),
+                        this.remySleepTarget.getZ() + 0.5,
+                        0.6
+                );
+            } else {
+                this.getNavigation().stop();
+                this.setDeltaMovement(0.0, 0.0, 0.0);
+                this.remyComposterTarget = null;
+                this.startSleeping(this.remySleepTarget);
+            }
+        }
+    }
+
+    private BlockPos hamudmod$findNearbyBed() {
+        BlockPos origin = this.blockPosition();
+        int radius = 16;
+
+        BlockPos closest = null;
+        double closestDistance = Double.MAX_VALUE;
+
+        for (BlockPos pos : BlockPos.betweenClosed(
+                origin.offset(-radius, -3, -radius),
+                origin.offset(radius, 3, radius)
+        )) {
+            BlockState state = this.level().getBlockState(pos);
+
+            if (state.is(BlockTags.BEDS)) {
+                if (state.hasProperty(BedBlock.OCCUPIED) && state.getValue(BedBlock.OCCUPIED)) {
+                    continue;
+                }
+
+                double distance = pos.distSqr(origin);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closest = pos.immutable();
+                }
+            }
+        }
+
+        return closest;
+    }
+
+    private void hamudmod$handleComposterAffinity() {
+        if (this.isTrading() || this.isSleeping()) {
+            return;
+        }
+
+        if (this.remyComposterSearchCooldown > 0) {
+            this.remyComposterSearchCooldown--;
+        }
+
+        if (this.remyComposterTarget == null && this.remyComposterSearchCooldown <= 0) {
+            this.remyComposterTarget = this.hamudmod$findNearbyComposter();
+            this.remyComposterSearchCooldown = 120;
+        }
+
+        if (this.remyComposterTarget != null) {
+            if (!this.level().getBlockState(this.remyComposterTarget).is(Blocks.COMPOSTER)) {
+                this.remyComposterTarget = null;
+                return;
+            }
+
+            double distance = this.distanceToSqr(
+                    this.remyComposterTarget.getX() + 0.5,
+                    this.remyComposterTarget.getY(),
+                    this.remyComposterTarget.getZ() + 0.5
+            );
+
+            if (distance > 6.0) {
+                this.getNavigation().moveTo(
+                        this.remyComposterTarget.getX() + 0.5,
+                        this.remyComposterTarget.getY(),
+                        this.remyComposterTarget.getZ() + 0.5,
+                        0.45
+                );
+            } else {
+                this.getNavigation().stop();
+
+                double lookX = this.remyComposterTarget.getX() + 0.5;
+                double lookY = this.remyComposterTarget.getY() + 0.8;
+                double lookZ = this.remyComposterTarget.getZ() + 0.5;
+
+                this.getLookControl().setLookAt(lookX, lookY, lookZ);
+            }
+        }
+    }
+
+    private BlockPos hamudmod$findNearbyComposter() {
+        BlockPos origin = this.blockPosition();
+        int radius = 16;
+
+        BlockPos closest = null;
+        double closestDistance = Double.MAX_VALUE;
+
+        for (BlockPos pos : BlockPos.betweenClosed(
+                origin.offset(-radius, -3, -radius),
+                origin.offset(radius, 3, radius)
+        )) {
+            BlockState state = this.level().getBlockState(pos);
+
+            if (state.is(Blocks.COMPOSTER)) {
+                double distance = pos.distSqr(origin);
+
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closest = pos.immutable();
+                }
+            }
+        }
+
+        return closest;
     }
 
     private void hamudmod$spawnCigaretteSmoke() {
@@ -340,11 +534,17 @@ public class RemyEntity extends AbstractVillager {
         this.remyTradeLevel = tag.getInt("RemyTradeLevel");
         this.remyTradeXp = tag.getInt("RemyTradeXp");
 
-        if (this.remyTradeLevel <= 0) {
+        if (this.remyTradeLevel < 1) {
             this.remyTradeLevel = 1;
         }
 
-        this.remyTradeLevel = calculateRemyLevel();
+        if (this.remyTradeLevel > 5) {
+            this.remyTradeLevel = 5;
+        }
+
+        if (this.remyTradeXp < 0) {
+            this.remyTradeXp = 0;
+        }
 
         this.updateTrades();
     }
@@ -356,4 +556,4 @@ public class RemyEntity extends AbstractVillager {
         tag.putInt("RemyTradeLevel", this.remyTradeLevel);
         tag.putInt("RemyTradeXp", this.remyTradeXp);
     }
-    }
+}
