@@ -1,5 +1,7 @@
 {
   "item.hamud-mod.moeda_hamud": "Moeda Hamud",
   "entity.hamud-mod.remy": "Remy",
-  "item.hamud-mod.remy_spawn_egg": "Ovo de Invocação do Remy"
+  "item.hamud-mod.remy_spawn_egg": "Ovo de Invocação do Remy",
+  "entity.hamud-mod.chaban": "Chaban",
+  "item.hamud-mod.chaban_spawn_egg": "Ovo de Invocação do Chaban"
 }
