@@ -10,9 +10,11 @@ public class HamudModClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.register(ModEntities.REMY, RemyRenderer::new);
         EntityRendererRegistry.register(ModEntities.CHABAN, ChabanRenderer::new);
+        EntityRendererRegistry.register(ModEntities.VELOCIRAPTOR, VelociraptorRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(RemyModel.LAYER_LOCATION, RemyModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ChabanModel.LAYER_LOCATION, ChabanModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(VelociraptorModel.LAYER_LOCATION, VelociraptorModel::createBodyLayer);
 
         System.out.println("Hamud Mod Client carregado!");
     }

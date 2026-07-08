@@ -21,7 +21,12 @@ public class ModItems {
 
     public static final Item CHABAN_SPAWN_EGG = registerItem(
             "chaban_spawn_egg",
-            new SpawnEggItem(ModEntities.CHABAN, 0xFFFFFF, 0xFFFFFF, new Item.Properties())
+            new SpawnEggItem(ModEntities.CHABAN, 0x8B5A2B, 0xF5D76E, new Item.Properties())
+    );
+
+    public static final Item VELOCIRAPTOR_SPAWN_EGG = registerItem(
+            "velociraptor_spawn_egg",
+            new SpawnEggItem(ModEntities.VELOCIRAPTOR, 0x4B3828, 0x8C6B3F, new Item.Properties())
     );
 
     private static Item registerItem(String name, Item item) {
@@ -39,6 +44,7 @@ public class ModItems {
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(entries -> {
             entries.accept(REMY_SPAWN_EGG);
             entries.accept(CHABAN_SPAWN_EGG);
+            entries.accept(VELOCIRAPTOR_SPAWN_EGG);
         });
         System.out.println("Registrando itens do Hamud Mod...");
     }

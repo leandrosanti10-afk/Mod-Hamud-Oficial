@@ -8,6 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import hamud.mod.entity.VelociraptorEntity;
 
 public class ModEntities {
     public static final EntityType<RemyEntity> REMY = Registry.register(
@@ -26,9 +27,18 @@ public class ModEntities {
                     .build("chaban")
     );
 
+    public static final EntityType<VelociraptorEntity> VELOCIRAPTOR = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            new ResourceLocation(HamudMod.MOD_ID, "velociraptor"),
+            EntityType.Builder.of(VelociraptorEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.25f)
+                    .build("velociraptor")
+    );
+
     public static void registerEntities() {
         FabricDefaultAttributeRegistry.register(REMY, RemyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(CHABAN, ChabanEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(VELOCIRAPTOR, VelociraptorEntity.createAttributes());
 
         System.out.println("Registrando entidades do Hamud Mod...");
     }

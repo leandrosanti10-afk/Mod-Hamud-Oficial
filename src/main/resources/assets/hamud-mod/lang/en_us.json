@@ -3,5 +3,7 @@
   "entity.hamud-mod.remy": "Remy",
   "item.hamud-mod.remy_spawn_egg": "Remy Spawn Egg",
   "entity.hamud-mod.chaban": "Chaban",
-  "item.hamud-mod.chaban_spawn_egg": "Chaban Spawn Egg"
+  "item.hamud-mod.chaban_spawn_egg": "Chaban Spawn Egg",
+  "entity.hamud-mod.velociraptor": "Velociraptor",
+  "item.hamud-mod.velociraptor_spawn_egg": "Velociraptor Spawn Egg"
 }
