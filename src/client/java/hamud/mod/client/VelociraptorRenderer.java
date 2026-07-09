@@ -1,5 +1,6 @@
 package hamud.mod.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import hamud.mod.HamudMod;
 import hamud.mod.entity.VelociraptorEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -20,5 +21,14 @@ public class VelociraptorRenderer extends MobRenderer<VelociraptorEntity, Veloci
     @Override
     public ResourceLocation getTextureLocation(VelociraptorEntity entity) {
         return TEXTURE;
+    }
+
+    @Override
+    protected void scale(VelociraptorEntity entity, PoseStack poseStack, float partialTickTime) {
+        if (entity.isBaby()) {
+            poseStack.scale(0.45f, 0.45f, 0.45f);
+        } else {
+            poseStack.scale(1.0f, 1.0f, 1.0f);
+        }
     }
 }
