@@ -11,6 +11,8 @@ public class HamudMod implements ModInitializer {
 		ModBlocks.registerBlocks();
 		ModEntities.registerEntities();
 		ModVillagerTrades.registerTrades();
+		ModSounds.registerSounds();
+		ModLootTableModifiers.modifyLootTables();
 
 		System.out.println("Hamud Mod carregado!");
 	}

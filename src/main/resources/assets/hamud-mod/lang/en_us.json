@@ -6,5 +6,18 @@
   "item.hamud-mod.chaban_spawn_egg": "Chaban Spawn Egg",
   "entity.hamud-mod.velociraptor": "Velociraptor",
   "item.hamud-mod.velociraptor_spawn_egg": "Velociraptor Spawn Egg",
-  "block.hamud-mod.velociraptor_egg": "Velociraptor Egg"
+  "block.hamud-mod.velociraptor_egg": "Velociraptor Egg",
+  "item.hamud-mod.music_disc_o_vovis_ta_indeciso": "Music Disc",
+  "item.hamud-mod.music_disc_o_vovis_ta_indeciso.desc": "Vovis - Undecided",
+  "item.hamud-mod.music_disc_o_vovis_vai_comer_a_emilia": "Music Disc",
+  "item.hamud-mod.music_disc_o_vovis_vai_comer_a_emilia.desc": "Vovis - Going to Eat",
+  "item.hamud-mod.music_disc_o_vovis_e_hetero_ele_nao_gosta_de_pau": "Music Disc",
+  "item.hamud-mod.music_disc_o_vovis_e_hetero_ele_nao_gosta_de_pau.desc": "Vovis - Straight",
+  "item.hamud-mod.music_disc_o_vovis_carrega_tua_bolsa": "Music Disc",
+  "item.hamud-mod.music_disc_o_vovis_carrega_tua_bolsa.desc": "Vovis - Carry Your Purse",
+  "item.hamud-mod.music_disc_vovis_e_gay_e_ele_quica_no_pau": "Music Disc",
+  "item.hamud-mod.music_disc_vovis_e_gay_e_ele_quica_no_pau.desc": "Vovis - Gay",
+  "item.hamud-mod.music_disc_e_aniversario_do_bafora": "Music Disc",
+  "item.hamud-mod.music_disc_e_aniversario_do_bafora.desc": "Bafora - Birthday"
+
 }
