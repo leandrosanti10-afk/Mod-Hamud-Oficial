@@ -5,5 +5,6 @@
   "entity.hamud-mod.chaban": "Chaban",
   "item.hamud-mod.chaban_spawn_egg": "Ovo de Invocação do Chaban",
   "entity.hamud-mod.velociraptor": "Velociraptor",
-  "item.hamud-mod.velociraptor_spawn_egg": "Ovo de Invocação do Velociraptor"
+  "item.hamud-mod.velociraptor_spawn_egg": "Ovo de Invocação do Velociraptor",
+  "block.hamud-mod.velociraptor_egg": "Ovo de Velociraptor"
 }

@@ -8,8 +8,9 @@ public class HamudMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModItems.registerItems();
+		ModBlocks.registerBlocks();
 		ModEntities.registerEntities();
-//		ModBlocks.registerBlocks();
+		ModVillagerTrades.registerTrades();
 
 		System.out.println("Hamud Mod carregado!");
 	}

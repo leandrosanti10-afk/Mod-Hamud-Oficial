@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "hatch=0": {
+      "model": "hamud-mod:block/velociraptor_egg"
+    },
+    "hatch=1": {
+      "model": "hamud-mod:block/velociraptor_egg"
+    },
+    "hatch=2": {
+      "model": "hamud-mod:block/velociraptor_egg"
+    }
+  }
+}
