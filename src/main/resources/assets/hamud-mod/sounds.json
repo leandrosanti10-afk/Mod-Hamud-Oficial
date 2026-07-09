@@ -1,0 +1,50 @@
+{
+    "o_vovis_ta_indeciso": {
+        "sounds": [
+            {
+                "name": "hamud-mod:o_vovis_ta_indeciso",
+                "stream": true
+            }
+        ]
+    },
+    "o_vovis_vai_comer_a_emilia": {
+        "sounds": [
+            {
+                "name": "hamud-mod:o_vovis_vai_comer_a_emilia",
+                "stream": true
+            }
+        ]
+    },
+    "o_vovis_e_hetero_ele_nao_gosta_de_pau": {
+        "sounds": [
+            {
+                "name": "hamud-mod:o_vovis_e_hetero_ele_nao_gosta_de_pau",
+                "stream": true
+            }
+        ]
+    },
+    "o_vovis_carrega_tua_bolsa": {
+        "sounds": [
+            {
+                "name": "hamud-mod:o_vovis_carrega_tua_bolsa",
+                "stream": true
+            }
+        ]
+    },
+    "vovis_e_gay_e_ele_quica_no_pau": {
+        "sounds": [
+            {
+                "name": "hamud-mod:vovis_e_gay_e_ele_quica_no_pau",
+                "stream": true
+            }
+        ]
+    },
+    "e_aniversario_do_bafora": {
+        "sounds": [
+            {
+                "name": "hamud-mod:e_aniversario_do_bafora",
+                "stream": true
+            }
+        ]
+    }
+}

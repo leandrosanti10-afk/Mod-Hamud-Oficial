@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hamud-mod:item/music_disc_e_aniversario_do_bafora"
+  }
+}
