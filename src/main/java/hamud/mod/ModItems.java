@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.RecordItem;
+import hamud.mod.item.ArpaoItem;
 
 public class ModItems {
     public static final Item MOEDA_HAMUD = registerItem(
@@ -29,6 +30,17 @@ public class ModItems {
             "velociraptor_spawn_egg",
             new SpawnEggItem(ModEntities.VELOCIRAPTOR, 0x4B3828, 0x8C6B3F, new Item.Properties())
     );
+
+    public static final Item BORGES_SPAWN_EGG = registerItem(
+            "borges_spawn_egg",
+            new SpawnEggItem(ModEntities.BORGES, 0x0B8F3A, 0xD6B14A, new Item.Properties())
+    );
+
+    public static final Item ARPAO = registerItem(
+            "arpao",
+            new ArpaoItem(new Item.Properties().durability(384))
+    );
+
 
     public static final Item MUSIC_DISC_O_VOVIS_TA_INDECISO = registerItem("music_disc_o_vovis_ta_indeciso",
             new RecordItem(14, ModSounds.O_VOVIS_TA_INDECISO, new Item.Properties().stacksTo(1), 1200));
@@ -59,6 +71,7 @@ public class ModItems {
             entries.accept(REMY_SPAWN_EGG);
             entries.accept(CHABAN_SPAWN_EGG);
             entries.accept(VELOCIRAPTOR_SPAWN_EGG);
+            entries.accept(BORGES_SPAWN_EGG);
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> {
             entries.accept(MUSIC_DISC_O_VOVIS_TA_INDECISO);
@@ -67,6 +80,9 @@ public class ModItems {
             entries.accept(MUSIC_DISC_O_VOVIS_CARREGA_BOLSA);
             entries.accept(MUSIC_DISC_VOVIS_E_GAY);
             entries.accept(MUSIC_DISC_E_ANIVERSARIO_BAFORA);
+        });
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
+            entries.accept(ARPAO);
         });
         System.out.println("Registrando itens do Hamud Mod...");
     }

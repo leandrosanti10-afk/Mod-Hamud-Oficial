@@ -21,8 +21,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -52,17 +54,29 @@ public class ChabanEntity extends AbstractVillager {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 24.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.34)
-                .add(Attributes.FOLLOW_RANGE, 18.0);
+                .add(Attributes.MAX_HEALTH, 24.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.34D)
+                .add(Attributes.FOLLOW_RANGE, 28.0D)
+                .add(Attributes.ATTACK_DAMAGE, 6.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.45D);
     }
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new RandomStrollGoal(this, 0.8));
-        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0f));
-        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+        /*
+         * Quando tiver alvo, ele corre atrás e bate com o porrete.
+         */
+        this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 1.25D, true));
+
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+
+        /*
+         * Ao apanhar, ele define quem bateu nele como alvo.
+         */
+        this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
     }
 
     @Override
@@ -106,16 +120,12 @@ public class ChabanEntity extends AbstractVillager {
     private List<MerchantOffer> createChabanTrades() {
         List<MerchantOffer> trades = new ArrayList<>();
 
-        // =========================
-        // NÍVEL 1 — 2 TROCAS
-        // =========================
-
         trades.add(new MerchantOffer(
                 new ItemStack(Items.BONE, 8),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
                 16,
                 2,
-                0.05f
+                0.05F
         ));
 
         trades.add(new MerchantOffer(
@@ -123,19 +133,15 @@ public class ChabanEntity extends AbstractVillager {
                 new ItemStack(Items.TORCH, 8),
                 16,
                 1,
-                0.05f
+                0.05F
         ));
-
-        // =========================
-        // NÍVEL 2 — 4 TROCAS
-        // =========================
 
         trades.add(new MerchantOffer(
                 new ItemStack(Items.LEATHER, 8),
                 new ItemStack(ModItems.MOEDA_HAMUD, 2),
                 16,
                 5,
-                0.05f
+                0.05F
         ));
 
         trades.add(new MerchantOffer(
@@ -143,19 +149,15 @@ public class ChabanEntity extends AbstractVillager {
                 new ItemStack(Items.COOKED_BEEF, 4),
                 16,
                 5,
-                0.05f
+                0.05F
         ));
-
-        // =========================
-        // NÍVEL 3 — 6 TROCAS
-        // =========================
 
         trades.add(new MerchantOffer(
                 new ItemStack(Items.STONE, 16),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
                 16,
                 10,
-                0.05f
+                0.05F
         ));
 
         trades.add(new MerchantOffer(
@@ -163,19 +165,15 @@ public class ChabanEntity extends AbstractVillager {
                 new ItemStack(Items.ARROW, 16),
                 16,
                 10,
-                0.05f
+                0.05F
         ));
-
-        // =========================
-        // NÍVEL 4 — 8 TROCAS
-        // =========================
 
         trades.add(new MerchantOffer(
                 new ItemStack(Items.COAL, 8),
                 new ItemStack(ModItems.MOEDA_HAMUD, 2),
                 16,
                 15,
-                0.05f
+                0.05F
         ));
 
         trades.add(new MerchantOffer(
@@ -183,19 +181,15 @@ public class ChabanEntity extends AbstractVillager {
                 new ItemStack(Items.BOW, 1),
                 8,
                 15,
-                0.05f
+                0.05F
         ));
-
-        // =========================
-        // NÍVEL 5 — 10 TROCAS
-        // =========================
 
         trades.add(new MerchantOffer(
                 new ItemStack(ModItems.MOEDA_HAMUD, 8),
                 new ItemStack(Items.GOAT_HORN, 1),
                 6,
                 20,
-                0.05f
+                0.05F
         ));
 
         trades.add(new MerchantOffer(
@@ -203,7 +197,7 @@ public class ChabanEntity extends AbstractVillager {
                 new ItemStack(ModBlocks.VELOCIRAPTOR_EGG.asItem(), 1),
                 3,
                 30,
-                0.05f
+                0.05F
         ));
 
         return trades;
@@ -227,8 +221,16 @@ public class ChabanEntity extends AbstractVillager {
             return InteractionResult.PASS;
         }
 
+        /*
+         * Se ele estiver agressivo, não abre troca.
+         */
+        if (this.getTarget() != null && this.getTarget().isAlive()) {
+            player.displayClientMessage(Component.literal("Chaban está agressivo!"), true);
+            return InteractionResult.CONSUME;
+        }
+
         this.getNavigation().stop();
-        this.setDeltaMovement(0.0, 0.0, 0.0);
+        this.setDeltaMovement(0.0D, 0.0D, 0.0D);
 
         this.updateTrades();
 
@@ -283,7 +285,7 @@ public class ChabanEntity extends AbstractVillager {
                     new ExperienceOrb(
                             this.level(),
                             this.getX(),
-                            this.getY() + 0.5,
+                            this.getY() + 0.5D,
                             this.getZ(),
                             xp
                     )
@@ -304,11 +306,33 @@ public class ChabanEntity extends AbstractVillager {
 
             if (attacker instanceof LivingEntity livingAttacker && livingAttacker != this) {
                 System.out.println("Chaban foi atacado por: " + livingAttacker.getName().getString());
+
+                /*
+                 * Chaban fica agressivo e ataca quem bateu nele.
+                 */
+                this.setTarget(livingAttacker);
+                this.setAggressive(true);
+                this.getNavigation().stop();
+                this.getNavigation().moveTo(livingAttacker, 1.25D);
+
+                /*
+                 * Os velociraptors também atacam.
+                 */
                 this.commandVelociraptorsToAttack(livingAttacker);
             }
         }
 
         return result;
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity target) {
+        /*
+         * Isso faz ele balançar o braço do porrete ao atacar.
+         */
+        this.swing(InteractionHand.MAIN_HAND);
+
+        return super.doHurtTarget(target);
     }
 
     @Override
@@ -319,9 +343,27 @@ public class ChabanEntity extends AbstractVillager {
             return;
         }
 
+        LivingEntity target = this.getTarget();
+
+        if (target != null && target.isAlive()) {
+            this.setAggressive(true);
+
+            if (this.distanceToSqr(target) > 4.0D) {
+                this.getNavigation().moveTo(target, 1.25D);
+            }
+
+            this.getLookControl().setLookAt(
+                    target.getX(),
+                    target.getEyeY(),
+                    target.getZ()
+            );
+        } else {
+            this.setAggressive(false);
+        }
+
         if (this.isTrading()) {
             this.getNavigation().stop();
-            this.setDeltaMovement(0.0, 0.0, 0.0);
+            this.setDeltaMovement(0.0D, 0.0D, 0.0D);
         }
 
         this.handleVelociraptorGuards();
@@ -406,33 +448,26 @@ public class ChabanEntity extends AbstractVillager {
             return;
         }
 
-        // A corda nunca deve ser removida
         if (!guard.isLeashed() || guard.getLeashHolder() != this) {
             guard.setLeashedTo(this, true);
         }
 
         LivingEntity target = guard.getTarget();
 
-        // Se tem alvo, ele tenta atacar ainda preso na corda
         if (target != null && target.isAlive()) {
             guard.setAggressive(true);
 
             double distanceToTarget = guard.distanceToSqr(target);
             double distanceToChaban = guard.distanceToSqr(this);
 
-            // Se o alvo estiver muito longe da área da corda,
-            // o Chaban anda até perto do alvo para os velociraptors conseguirem atacar.
             if (this.distanceToSqr(target) > 36.0D) {
                 this.getNavigation().moveTo(target, 0.85D);
             }
 
-            // O velociraptor tenta avançar no alvo, mas continua leashed
             if (distanceToTarget > 2.5D) {
                 guard.getNavigation().moveTo(target, 1.35D);
             }
 
-            // Segurança: se ele ficar longe demais do Chaban, volta para perto
-            // para evitar bug de corda esticada demais.
             if (distanceToChaban > 64.0D) {
                 guard.getNavigation().moveTo(this, 1.25D);
             }
@@ -440,7 +475,6 @@ public class ChabanEntity extends AbstractVillager {
             return;
         }
 
-        // Sem alvo: volta ao comportamento normal de guarda
         guard.setAggressive(false);
 
         double distance = guard.distanceToSqr(this);
@@ -476,8 +510,6 @@ public class ChabanEntity extends AbstractVillager {
         this.commandGuardToAttack(guardOne, target);
         this.commandGuardToAttack(guardTwo, target);
 
-        // O Chaban anda um pouco na direção do agressor,
-        // para os velociraptors conseguirem alcançar sem arrebentar a corda.
         if (this.distanceToSqr(target) > 16.0D) {
             this.getNavigation().moveTo(target, 0.85D);
         }
@@ -492,8 +524,6 @@ public class ChabanEntity extends AbstractVillager {
             return;
         }
 
-        // Não remove a corda.
-        // Se a corda tiver sumido por algum motivo, prende de novo no Chaban.
         if (!guard.isLeashed() || guard.getLeashHolder() != this) {
             guard.setLeashedTo(this, true);
         }

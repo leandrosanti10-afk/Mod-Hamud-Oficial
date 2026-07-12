@@ -135,23 +135,74 @@ public class ChabanModel<T extends ChabanEntity> extends EntityModel<T> {
             float netHeadYaw,
             float headPitch
     ) {
+        this.head.xRot = 0.0F;
+        this.head.yRot = 0.0F;
+        this.head.zRot = 0.0F;
+
+        this.body.xRot = 0.0F;
+        this.body.yRot = 0.0F;
+        this.body.zRot = 0.0F;
+
+        this.right_arm.xRot = 0.0F;
+        this.right_arm.yRot = 0.0F;
+        this.right_arm.zRot = 0.0F;
+
+        this.left_arm.xRot = 0.0F;
+        this.left_arm.yRot = 0.0F;
+        this.left_arm.zRot = 0.0F;
+
+        this.right_leg.xRot = 0.0F;
+        this.right_leg.yRot = 0.0F;
+        this.right_leg.zRot = 0.0F;
+
+        this.left_leg.xRot = 0.0F;
+        this.left_leg.yRot = 0.0F;
+        this.left_leg.zRot = 0.0F;
+
+        float walkSpeed = limbSwing * 0.6662F;
+        float walkAmount = Math.min(limbSwingAmount, 1.0F);
+
         this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
         this.head.xRot = headPitch * ((float) Math.PI / 180F);
 
-        this.right_leg.xRot = (float) Math.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        this.left_leg.xRot = (float) Math.cos(limbSwing * 0.6662F + Math.PI) * 1.4F * limbSwingAmount;
+        this.right_leg.xRot = (float) Math.cos(walkSpeed) * 1.4F * walkAmount;
+        this.left_leg.xRot = (float) Math.cos(walkSpeed + Math.PI) * 1.4F * walkAmount;
 
-        this.right_arm.xRot = (float) Math.cos(limbSwing * 0.6662F + Math.PI) * 1.2F * limbSwingAmount;
-        this.left_arm.xRot = (float) Math.cos(limbSwing * 0.6662F) * 1.2F * limbSwingAmount;
+        this.right_arm.xRot = (float) Math.cos(walkSpeed + Math.PI) * 1.2F * walkAmount;
+        this.left_arm.xRot = (float) Math.cos(walkSpeed) * 1.2F * walkAmount;
 
-        this.body.yRot = (float) Math.sin(limbSwing * 0.3331F) * 0.08F * limbSwingAmount;
+        this.body.yRot = (float) Math.sin(limbSwing * 0.3331F) * 0.08F * walkAmount;
 
-        if (limbSwingAmount < 0.05F) {
+        if (walkAmount < 0.05F) {
             this.right_arm.xRot = 0.0F;
             this.left_arm.xRot = 0.0F;
             this.right_leg.xRot = 0.0F;
             this.left_leg.xRot = 0.0F;
             this.body.yRot = 0.0F;
+        }
+
+        /*
+         * Animação de ataque com o porrete.
+         * attackTime é ativado quando o Chaban usa swing(MAIN_HAND)
+         * no ChabanEntity#doHurtTarget.
+         */
+        if (this.attackTime > 0.0F) {
+            float attack = this.attackTime;
+            float swing = (float) Math.sin(attack * Math.PI);
+
+            /*
+             * Braço direito é o braço com o porrete.
+             * Ele levanta e bate para baixo.
+             */
+            this.right_arm.xRot = -2.35F + swing * 1.85F;
+            this.right_arm.yRot = -0.35F;
+            this.right_arm.zRot = 0.22F;
+
+            /*
+             * Corpo acompanha a pancada.
+             */
+            this.body.yRot += 0.25F * swing;
+            this.head.yRot += 0.12F * swing;
         }
     }
 

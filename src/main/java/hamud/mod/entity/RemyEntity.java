@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import hamud.mod.entity.goal.RemyPanicGoal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class RemyEntity extends AbstractVillager {
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new RemyPanicGoal(this, 1.35D));
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new RandomStrollGoal(this, 0.8));
         this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0f));
