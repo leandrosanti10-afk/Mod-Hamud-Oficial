@@ -21,6 +21,8 @@
   "item.hamud-mod.music_disc_e_aniversario_do_bafora.desc": "Bafora - Birthday",
   "entity.hamud-mod.borges": "Borges",
   "item.hamud-mod.borges_spawn_egg": "Borges Spawn Egg",
-  "item.hamud-mod.arpao": "Harpoon"
+  "item.hamud-mod.arpao": "Harpoon",
+  "entity.hamud-mod.brano": "Brano",
+  "item.hamud-mod.brano_spawn_egg": "Brano Spawn Egg"
 
 }

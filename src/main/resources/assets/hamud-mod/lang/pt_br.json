@@ -21,5 +21,7 @@
   "item.hamud-mod.music_disc_e_aniversario_do_bafora.desc": "Bafora - Aniversário",
   "entity.hamud-mod.borges": "Borges",
   "item.hamud-mod.borges_spawn_egg": "Ovo de Invocação do Borges",
-  "item.hamud-mod.arpao": "Arpão"
+  "item.hamud-mod.arpao": "Arpão",
+  "entity.hamud-mod.brano": "Brano",
+  "item.hamud-mod.brano_spawn_egg": "Ovo de Invocação do Brano"
 }

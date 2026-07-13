@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import hamud.mod.entity.BranoEntity;
 
 public class ModEntities {
 
@@ -46,6 +47,14 @@ public class ModEntities {
                     .build("borges")
     );
 
+    public static final EntityType<BranoEntity> BRANO = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            new ResourceLocation(HamudMod.MOD_ID, "brano"),
+            EntityType.Builder.of(BranoEntity::new, MobCategory.CREATURE)
+                    .sized(0.9F, 2.05F)
+                    .build("brano")
+    );
+
     public static final EntityType<ArpaoProjectileEntity> ARPAO_PROJECTILE = Registry.register(
             BuiltInRegistries.ENTITY_TYPE,
             new ResourceLocation(HamudMod.MOD_ID, "arpao_projectile"),
@@ -61,6 +70,7 @@ public class ModEntities {
         FabricDefaultAttributeRegistry.register(CHABAN, ChabanEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(VELOCIRAPTOR, VelociraptorEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(BORGES, BorgesEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(BRANO, BranoEntity.createAttributes());
 
         /*
          * Não registrar atributo para ARPAO_PROJECTILE.

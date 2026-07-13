@@ -36,6 +36,11 @@ public class ModItems {
             new SpawnEggItem(ModEntities.BORGES, 0x0B8F3A, 0xD6B14A, new Item.Properties())
     );
 
+    public static final Item BRANO_SPAWN_EGG = registerItem(
+            "brano_spawn_egg",
+            new SpawnEggItem(ModEntities.BRANO, 0x2B1A12, 0xE8D0A8, new Item.Properties())
+    );
+
     public static final Item ARPAO = registerItem(
             "arpao",
             new ArpaoItem(new Item.Properties().durability(384))
@@ -72,6 +77,7 @@ public class ModItems {
             entries.accept(CHABAN_SPAWN_EGG);
             entries.accept(VELOCIRAPTOR_SPAWN_EGG);
             entries.accept(BORGES_SPAWN_EGG);
+            entries.accept(BRANO_SPAWN_EGG);
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> {
             entries.accept(MUSIC_DISC_O_VOVIS_TA_INDECISO);
