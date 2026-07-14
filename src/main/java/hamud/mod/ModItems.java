@@ -18,27 +18,27 @@ public class ModItems {
 
     public static final Item REMY_SPAWN_EGG = registerItem(
             "remy_spawn_egg",
-            new SpawnEggItem(ModEntities.REMY, 0x8B5A2B, 0xF5D76E, new Item.Properties())
+            new SpawnEggItem(ModEntities.REMY, 0xE6C58A, 0x6B3F1D, new Item.Properties())
     );
 
     public static final Item CHABAN_SPAWN_EGG = registerItem(
             "chaban_spawn_egg",
-            new SpawnEggItem(ModEntities.CHABAN, 0x8B5A2B, 0xF5D76E, new Item.Properties())
+            new SpawnEggItem(ModEntities.CHABAN, 0xD8B078, 0x4A2A16, new Item.Properties())
     );
 
     public static final Item VELOCIRAPTOR_SPAWN_EGG = registerItem(
             "velociraptor_spawn_egg",
-            new SpawnEggItem(ModEntities.VELOCIRAPTOR, 0x4B3828, 0x8C6B3F, new Item.Properties())
+            new SpawnEggItem(ModEntities.VELOCIRAPTOR, 0x6F7A3A, 0x2E2418, new Item.Properties())
     );
 
     public static final Item BORGES_SPAWN_EGG = registerItem(
             "borges_spawn_egg",
-            new SpawnEggItem(ModEntities.BORGES, 0x0B8F3A, 0xD6B14A, new Item.Properties())
+            new SpawnEggItem(ModEntities.BORGES, 0x4FC97A, 0xD6B14A, new Item.Properties())
     );
 
     public static final Item BRANO_SPAWN_EGG = registerItem(
             "brano_spawn_egg",
-            new SpawnEggItem(ModEntities.BRANO, 0x2B1A12, 0xE8D0A8, new Item.Properties())
+            new SpawnEggItem(ModEntities.BRANO, 0xE8E8E8, 0x2B1A12, new Item.Properties())
     );
 
     public static final Item ARPAO = registerItem(

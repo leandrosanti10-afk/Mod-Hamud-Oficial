@@ -32,7 +32,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-
+import hamud.mod.entity.goal.HamudVillagerZombiePanicGoal;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -55,6 +55,7 @@ public class BorgesEntity extends AbstractVillager {
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new HamudVillagerZombiePanicGoal(this, 1.35D, 8.0D));
         /*
          * Prioridade 0:
          * Quando apanha, ele foge desesperado.
