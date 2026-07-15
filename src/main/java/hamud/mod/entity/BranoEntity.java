@@ -134,7 +134,7 @@ public class BranoEntity extends AbstractVillager {
         // =========================
 
         trades.add(new MerchantOffer(
-                new ItemStack(Items.COPPER_INGOT, 6),
+                new ItemStack(Items.IRON_INGOT, 4),
                 new ItemStack(ModItems.MOEDA_HAMUD, 1),
                 16,
                 5,
