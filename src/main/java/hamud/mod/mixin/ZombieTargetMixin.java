@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import hamud.mod.entity.HenriqueEntity;
 
 @Mixin(Zombie.class)
 public abstract class ZombieTargetMixin extends PathfinderMob {
@@ -44,6 +45,11 @@ public abstract class ZombieTargetMixin extends PathfinderMob {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
                 this,
                 BranoEntity.class,
+                true
+        ));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(
+                this,
+                HenriqueEntity.class,
                 true
         ));
     }

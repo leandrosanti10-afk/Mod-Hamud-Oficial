@@ -14,6 +14,7 @@ public class HamudModClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.BORGES, BorgesRenderer::new);
         EntityRendererRegistry.register(ModEntities.ARPAO_PROJECTILE, ArpaoProjectileRenderer::new);
         EntityRendererRegistry.register(ModEntities.BRANO, BranoRenderer::new);
+        EntityRendererRegistry.register(ModEntities.HENRIQUE, HenriqueRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(RemyModel.LAYER_LOCATION, RemyModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ChabanModel.LAYER_LOCATION, ChabanModel::createBodyLayer);
@@ -21,6 +22,7 @@ public class HamudModClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(BorgesModel.LAYER_LOCATION, BorgesModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ArpaoProjectileModel.LAYER_LOCATION, ArpaoProjectileModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(BranoModel.LAYER_LOCATION, BranoModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(HenriqueModel.LAYER_LOCATION, HenriqueModel::createBodyLayer);
 
         System.out.println("Hamud Mod Client carregado!");
     }

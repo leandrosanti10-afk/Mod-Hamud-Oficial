@@ -9,6 +9,8 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.RecordItem;
 import hamud.mod.item.ArpaoItem;
+import hamud.mod.item.BebeHamudItem;
+import hamud.mod.item.CoracaoGuardiaoItem;
 
 public class ModItems {
     public static final Item MOEDA_HAMUD = registerItem(
@@ -41,9 +43,24 @@ public class ModItems {
             new SpawnEggItem(ModEntities.BRANO, 0xE8E8E8, 0x2B1A12, new Item.Properties())
     );
 
+    public static final Item HENRIQUE_SPAWN_EGG = registerItem(
+            "henrique_spawn_egg",
+            new SpawnEggItem(ModEntities.HENRIQUE, 0xD6B06A, 0x5A3418, new Item.Properties())
+    );
+
     public static final Item ARPAO = registerItem(
             "arpao",
             new ArpaoItem(new Item.Properties().durability(384))
+    );
+
+    public static final Item BEBE_HAMUD = registerItem(
+            "bebe_hamud",
+            new BebeHamudItem(new Item.Properties().stacksTo(1))
+    );
+
+    public static final Item CORACAO_GUARDIAO = registerItem(
+            "coracao_guardiao",
+            new CoracaoGuardiaoItem(new Item.Properties().stacksTo(1))
     );
 
 
@@ -78,6 +95,7 @@ public class ModItems {
             entries.accept(VELOCIRAPTOR_SPAWN_EGG);
             entries.accept(BORGES_SPAWN_EGG);
             entries.accept(BRANO_SPAWN_EGG);
+            entries.accept(HENRIQUE_SPAWN_EGG);
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> {
             entries.accept(MUSIC_DISC_O_VOVIS_TA_INDECISO);
@@ -86,6 +104,8 @@ public class ModItems {
             entries.accept(MUSIC_DISC_O_VOVIS_CARREGA_BOLSA);
             entries.accept(MUSIC_DISC_VOVIS_E_GAY);
             entries.accept(MUSIC_DISC_E_ANIVERSARIO_BAFORA);
+            entries.accept(BEBE_HAMUD);
+            entries.accept(CORACAO_GUARDIAO);
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
             entries.accept(ARPAO);
