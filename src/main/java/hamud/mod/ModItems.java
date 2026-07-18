@@ -11,6 +11,7 @@ import net.minecraft.world.item.RecordItem;
 import hamud.mod.item.ArpaoItem;
 import hamud.mod.item.BebeHamudItem;
 import hamud.mod.item.CoracaoGuardiaoItem;
+import hamud.mod.item.RaioRogerioItem;
 
 public class ModItems {
     public static final Item MOEDA_HAMUD = registerItem(
@@ -63,6 +64,11 @@ public class ModItems {
             new CoracaoGuardiaoItem(new Item.Properties().stacksTo(1))
     );
 
+    public static final Item RAIO_ROGERIO = registerItem(
+            "raio_rogerio",
+            new RaioRogerioItem(new Item.Properties().stacksTo(1))
+    );
+
 
     public static final Item MUSIC_DISC_O_VOVIS_TA_INDECISO = registerItem("music_disc_o_vovis_ta_indeciso",
             new RecordItem(14, ModSounds.O_VOVIS_TA_INDECISO, new Item.Properties().stacksTo(1), 1200));
@@ -106,6 +112,7 @@ public class ModItems {
             entries.accept(MUSIC_DISC_E_ANIVERSARIO_BAFORA);
             entries.accept(BEBE_HAMUD);
             entries.accept(CORACAO_GUARDIAO);
+            entries.accept(RAIO_ROGERIO);
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
             entries.accept(ARPAO);
