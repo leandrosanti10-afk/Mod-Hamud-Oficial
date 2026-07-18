@@ -10,6 +10,7 @@ public class HamudMod implements ModInitializer {
 		ModItems.registerItems();
 		ModBlocks.registerBlocks();
 		ModEntities.registerEntities();
+		ModMenus.registerMenus();
 		ModVillagerTrades.registerTrades();
 		ModSounds.registerSounds();
 		ModLootTableModifiers.modifyLootTables();

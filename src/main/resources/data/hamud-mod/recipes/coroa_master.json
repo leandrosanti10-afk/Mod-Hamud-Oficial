@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GOG",
+    "RCB",
+    "GHG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "O": {
+      "item": "hamud-mod:olho_macaco"
+    },
+    "R": {
+      "item": "hamud-mod:raio_rogerio"
+    },
+    "C": {
+      "item": "hamud-mod:chama_eterna"
+    },
+    "B": {
+      "item": "hamud-mod:bebe_hamud"
+    },
+    "H": {
+      "item": "hamud-mod:coracao_guardiao"
+    }
+  },
+  "result": {
+    "item": "hamud-mod:coroa_master",
+    "count": 1
+  }
+}

@@ -4,6 +4,8 @@ import hamud.mod.ModEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import hamud.mod.ModMenus;
+import net.minecraft.client.gui.screens.MenuScreens;
 
 public class HamudModClient implements ClientModInitializer {
     @Override
@@ -15,6 +17,7 @@ public class HamudModClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.ARPAO_PROJECTILE, ArpaoProjectileRenderer::new);
         EntityRendererRegistry.register(ModEntities.BRANO, BranoRenderer::new);
         EntityRendererRegistry.register(ModEntities.HENRIQUE, HenriqueRenderer::new);
+        MenuScreens.register(ModMenus.COROA_MASTER_MENU, CoroaMasterScreen::new);
 
         EntityModelLayerRegistry.registerModelLayer(RemyModel.LAYER_LOCATION, RemyModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ChabanModel.LAYER_LOCATION, ChabanModel::createBodyLayer);

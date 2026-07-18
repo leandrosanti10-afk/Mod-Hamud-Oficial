@@ -12,6 +12,9 @@ import hamud.mod.item.ArpaoItem;
 import hamud.mod.item.BebeHamudItem;
 import hamud.mod.item.CoracaoGuardiaoItem;
 import hamud.mod.item.RaioRogerioItem;
+import hamud.mod.item.OlhoMacacoItem;
+import hamud.mod.item.ChamaEternaItem;
+import hamud.mod.item.CoroaMasterItem;
 
 public class ModItems {
     public static final Item MOEDA_HAMUD = registerItem(
@@ -69,6 +72,21 @@ public class ModItems {
             new RaioRogerioItem(new Item.Properties().stacksTo(1))
     );
 
+    public static final Item OLHO_MACACO = registerItem(
+            "olho_macaco",
+            new OlhoMacacoItem(new Item.Properties().stacksTo(1))
+    );
+
+    public static final Item CHAMA_ETERNA = registerItem(
+            "chama_eterna",
+            new ChamaEternaItem(new Item.Properties().stacksTo(1))
+    );
+
+    public static final Item COROA_MASTER = registerItem(
+            "coroa_master",
+            new CoroaMasterItem(new Item.Properties().stacksTo(1))
+    );
+
 
     public static final Item MUSIC_DISC_O_VOVIS_TA_INDECISO = registerItem("music_disc_o_vovis_ta_indeciso",
             new RecordItem(14, ModSounds.O_VOVIS_TA_INDECISO, new Item.Properties().stacksTo(1), 1200));
@@ -113,6 +131,9 @@ public class ModItems {
             entries.accept(BEBE_HAMUD);
             entries.accept(CORACAO_GUARDIAO);
             entries.accept(RAIO_ROGERIO);
+            entries.accept(OLHO_MACACO);
+            entries.accept(CHAMA_ETERNA);
+            entries.accept(COROA_MASTER);
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
             entries.accept(ARPAO);
