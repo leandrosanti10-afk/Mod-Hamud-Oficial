@@ -262,7 +262,7 @@ public class ChabanEntity extends AbstractVillager {
     @Override
     protected void rewardTradeXp(MerchantOffer offer) {
         if (this.chabanTradeLevel < 5) {
-            int xpGanho = 5;
+            int xpGanho = 1;
 
             this.chabanTradeXp += xpGanho;
 

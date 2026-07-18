@@ -292,7 +292,7 @@ public class BorgesEntity extends AbstractVillager {
     @Override
     protected void rewardTradeXp(MerchantOffer offer) {
         if (this.borgesTradeLevel < 5) {
-            int xpGanho = 5;
+            int xpGanho = 1;
 
             this.borgesTradeXp += xpGanho;
 
@@ -480,7 +480,7 @@ public class BorgesEntity extends AbstractVillager {
 
         public BorgesSwimAroundGoal(BorgesEntity borges) {
             this.borges = borges;
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
         @Override

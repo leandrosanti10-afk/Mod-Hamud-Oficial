@@ -270,7 +270,7 @@ public class BranoEntity extends AbstractVillager {
     @Override
     protected void rewardTradeXp(MerchantOffer offer) {
         if (this.branoTradeLevel < 5) {
-            int xpGanho = 5;
+            int xpGanho = 1;
 
             this.branoTradeXp += xpGanho;
 

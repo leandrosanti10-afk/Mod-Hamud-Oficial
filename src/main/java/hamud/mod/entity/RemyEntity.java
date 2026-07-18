@@ -261,7 +261,7 @@ public class RemyEntity extends AbstractVillager {
     @Override
     protected void rewardTradeXp(MerchantOffer offer) {
         if (this.remyTradeLevel < 5) {
-            int xpGanho = 5;
+            int xpGanho = 1;
 
             this.remyTradeXp += xpGanho;
 

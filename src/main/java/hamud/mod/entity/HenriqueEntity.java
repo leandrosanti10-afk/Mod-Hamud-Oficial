@@ -1,6 +1,8 @@
 package hamud.mod.entity;
 
+import hamud.mod.ModItems;
 import hamud.mod.entity.goal.HamudVillagerZombiePanicGoal;
+import hamud.mod.entity.goal.HenriquePanicGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,6 +23,8 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
@@ -28,15 +32,24 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import hamud.mod.entity.goal.HenriquePanicGoal;
 
 public class HenriqueEntity extends AbstractVillager {
+
+    public static final String ANY_MUSIC_DISC_TAG = "HamudAnyMusicDiscTrade";
+
+    private static final String HENRIQUE_LEVEL_TAG = "HenriqueLevel";
+    private static final String HENRIQUE_XP_TAG = "HenriqueXp";
+
+    private static final int MAX_LEVEL = 5;
 
     private BlockPos henriqueSleepTarget;
     private BlockPos henriqueWorkTarget;
 
     private int henriqueSleepSearchCooldown = 0;
     private int henriqueWorkSearchCooldown = 0;
+
+    private int henriqueLevel = 1;
+    private int henriqueXp = 0;
 
     public HenriqueEntity(EntityType<? extends AbstractVillager> entityType, Level level) {
         super(entityType, level);
@@ -67,11 +80,109 @@ public class HenriqueEntity extends AbstractVillager {
             offers.remove(offers.size() - 1);
         }
 
-        /*
-         * Henrique ainda não tem trocas.
-         * Quando formos adicionar as trocas do explorador,
-         * elas entram aqui com MerchantOffer.
-         */
+        if (this.henriqueLevel >= 1) {
+            offers.add(new MerchantOffer(
+                    new ItemStack(Items.AMETHYST_SHARD, 8),
+                    new ItemStack(ModItems.MOEDA_HAMUD, 2),
+                    16,
+                    1,
+                    0.05F
+            ));
+
+            offers.add(new MerchantOffer(
+                    new ItemStack(ModItems.MOEDA_HAMUD, 64),
+                    new ItemStack(ModItems.OLHO_MACACO, 1),
+                    4,
+                    1,
+                    0.05F
+            ));
+        }
+
+        if (this.henriqueLevel >= 2) {
+            offers.add(new MerchantOffer(
+                    new ItemStack(Items.GOLD_INGOT, 8),
+                    new ItemStack(ModItems.MOEDA_HAMUD, 3),
+                    16,
+                    1,
+                    0.05F
+            ));
+
+            offers.add(new MerchantOffer(
+                    new ItemStack(ModItems.MOEDA_HAMUD, 64),
+                    new ItemStack(ModItems.BEBE_HAMUD, 1),
+                    4,
+                    1,
+                    0.05F
+            ));
+        }
+
+        if (this.henriqueLevel >= 3) {
+            offers.add(new MerchantOffer(
+                    new ItemStack(Items.BLAZE_ROD, 1),
+                    new ItemStack(ModItems.MOEDA_HAMUD, 4),
+                    16,
+                    1,
+                    0.05F
+            ));
+
+            offers.add(new MerchantOffer(
+                    new ItemStack(ModItems.MOEDA_HAMUD, 64),
+                    new ItemStack(ModItems.CORACAO_GUARDIAO, 1),
+                    4,
+                    1,
+                    0.05F
+            ));
+        }
+
+        if (this.henriqueLevel >= 4) {
+            /*
+             * Mostra 1 troca só no villager.
+             * O custo visual é o disco 13 renomeado, mas o Mixin MerchantOfferAnyMusicDiscMixin
+             * faz o cliente e o servidor aceitarem qualquer disco.
+             */
+            offers.add(new MerchantOffer(
+                    this.createAnyMusicDiscCost(),
+                    new ItemStack(ModItems.MOEDA_HAMUD, 8),
+                    8,
+                    1,
+                    0.05F
+            ));
+
+            offers.add(new MerchantOffer(
+                    new ItemStack(ModItems.MOEDA_HAMUD, 64),
+                    new ItemStack(ModItems.RAIO_ROGERIO, 1),
+                    4,
+                    1,
+                    0.05F
+            ));
+        }
+
+        if (this.henriqueLevel >= 5) {
+            offers.add(new MerchantOffer(
+                    new ItemStack(Items.DRAGON_HEAD, 1),
+                    new ItemStack(ModItems.MOEDA_HAMUD, 64),
+                    4,
+                    1,
+                    0.05F
+            ));
+
+            offers.add(new MerchantOffer(
+                    new ItemStack(ModItems.MOEDA_HAMUD, 64),
+                    new ItemStack(ModItems.CHAMA_ETERNA, 1),
+                    4,
+                    1,
+                    0.05F
+            ));
+        }
+    }
+
+    private ItemStack createAnyMusicDiscCost() {
+        ItemStack disc = new ItemStack(Items.MUSIC_DISC_13, 1);
+
+        disc.getOrCreateTag().putBoolean(ANY_MUSIC_DISC_TAG, true);
+        disc.setHoverName(Component.literal("Qualquer Disco de Música"));
+
+        return disc;
     }
 
     @Override
@@ -115,15 +226,41 @@ public class HenriqueEntity extends AbstractVillager {
 
         this.openTradingScreen(
                 serverPlayer,
-                Component.literal("Henrique Explorador"),
-                1
+                Component.literal(this.getHenriqueTitle()),
+                this.henriqueLevel
         );
 
         return InteractionResult.CONSUME;
     }
 
+    private String getHenriqueTitle() {
+        return "Henrique Explorador";
+    }
+
     @Override
     protected void rewardTradeXp(MerchantOffer offer) {
+        if (this.henriqueLevel >= MAX_LEVEL) {
+            return;
+        }
+
+        this.henriqueXp += offer.getXp();
+
+        while (this.henriqueLevel < MAX_LEVEL && this.henriqueXp >= this.getXpNeededForNextLevel()) {
+            this.henriqueXp -= this.getXpNeededForNextLevel();
+            this.henriqueLevel++;
+        }
+
+        this.updateTrades();
+    }
+
+    private int getXpNeededForNextLevel() {
+        return switch (this.henriqueLevel) {
+            case 1 -> 12;
+            case 2 -> 20;
+            case 3 -> 32;
+            case 4 -> 48;
+            default -> Integer.MAX_VALUE;
+        };
     }
 
     @Override
@@ -322,10 +459,30 @@ public class HenriqueEntity extends AbstractVillager {
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
+
+        this.henriqueLevel = tag.getInt(HENRIQUE_LEVEL_TAG);
+        this.henriqueXp = tag.getInt(HENRIQUE_XP_TAG);
+
+        if (this.henriqueLevel < 1) {
+            this.henriqueLevel = 1;
+        }
+
+        if (this.henriqueLevel > MAX_LEVEL) {
+            this.henriqueLevel = MAX_LEVEL;
+        }
+
+        if (this.henriqueXp < 0) {
+            this.henriqueXp = 0;
+        }
+
+        this.updateTrades();
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
+
+        tag.putInt(HENRIQUE_LEVEL_TAG, this.henriqueLevel);
+        tag.putInt(HENRIQUE_XP_TAG, this.henriqueXp);
     }
 }

@@ -5,7 +5,9 @@
 	"mixins": [
 		"ExampleMixin",
 		"MerchantOfferMixin",
-		"ZombieTargetMixin"
+		"ZombieTargetMixin",
+		"MerchantOfferAnyMusicDiscMixin",
+		"MerchantMenuAnyMusicDiscMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
